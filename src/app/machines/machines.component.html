@@ -1,0 +1,13 @@
+<p>machines works!</p>
+<table>
+    <tr>
+        <td>ID</td>
+        <td>PATH</td>
+    </tr>
+    @for (vm of listVm; track vm) {
+        <tr>
+            <td>{{vm.id}}</td>
+            <td>{{vm.path}}</td>
+        </tr>
+    }
+</table>
