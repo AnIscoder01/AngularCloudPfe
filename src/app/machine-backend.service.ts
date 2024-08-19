@@ -33,7 +33,7 @@ export class MachineBackendService {
       'Content-Type':  'application/json',
       'Accept':  'application/json',
     });
-    alert(username);
+    
 	  return this.httpClient.get(this.API_SERVER+"/machines/"+username, {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 

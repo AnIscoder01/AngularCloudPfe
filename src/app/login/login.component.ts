@@ -28,11 +28,11 @@ export class LoginComponent {
         if (this.loginResult==true) {
             localStorage.setItem('username', this.username);
             this.router.navigate(['machines']);
-        }
-         
-        else
-          alert('login failed');
+        } 
+        else{
+          alert('login failed');}
     });
   }
 
+ 
 }

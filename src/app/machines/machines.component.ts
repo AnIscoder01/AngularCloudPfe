@@ -63,6 +63,15 @@ export class MachinesComponent implements OnInit{
     });
 }
 
+logOut(){
+    
+  localStorage.setItem('username', "");
+  window.location.reload();
+
+
+
+  
+}
 
 
     
@@ -70,11 +79,12 @@ export class MachinesComponent implements OnInit{
   ngOnInit(): void {
 
       let username=localStorage.getItem('username');
-      if (username == null)
-        this.router.navigate(['login']);      
+      if (username == ""){
+            this.router.navigate(['login']);
+        }
 
       this.username = username==null?"":username;
-      alert(this.username);
+     
       this.machineService.getMachinesByOwner(this.username).subscribe(data=>{
         this.listVm = data;
 
