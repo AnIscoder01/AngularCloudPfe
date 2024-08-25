@@ -1,0 +1,19 @@
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody >
+            @for (vm of listvm; track vm) {
+                <tr>
+                    <td>{{vm.id}}</td>
+                    <td><button (click)="onClickClone(vm.id)">Cloner</button></td>
+        
+                </tr>
+            }
+            
+        </tbody>
+    </table>

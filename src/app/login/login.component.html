@@ -1,8 +1,12 @@
-<div  style="margin: auto;width: 50%;">
-    <br><br>
-<table>
-  <tr><td>Login:</td><td><input type="text" [(ngModel)]="username"></td></tr>
-  <tr><td>Password:</td> <td><input type="password" [(ngModel)]="password"></td></tr>
-  <tr><td></td><td><button (click)="verifyLogin()">Connect</button></td></tr>
-</table>
+<div class="container d-flex">
 </div>
+<form class="login">
+  <h2>Welcome, to CloudApp!</h2>
+  <p>Please log in</p>
+  <input  name="username" type="text" placeholder="Username" [(ngModel)]="username">
+  <input name="password" type="password" placeholder="Password" [(ngModel)]="password">
+  <button  type="submit"  class="btn btn-primary" (click)="verifyLogin()" >login </button>
+  <div class="links">
+    <a href="#">Forgot password</a>
+  </div>
+</form>

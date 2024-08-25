@@ -20,10 +20,10 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      let username=localStorage.getItem('username');
-      if (username == null)
-        this.router.navigate(['login']);
-      else
-        this.router.navigate(['machines']);
+      // let username=localStorage.getItem('username');
+      // if (username == null)
+      //   this.router.navigate(['login']);
+      // else
+      //   this.router.navigate(['machines']);
   }
 }

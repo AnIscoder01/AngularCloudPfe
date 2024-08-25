@@ -17,7 +17,7 @@ import { Machine } from '../machine';
 export class MachinesComponent implements OnInit{
 
   
-  listVm: any[]=[];
+  listVm:any[]=[];
   showWait:boolean=false;
   username:string="";
 
@@ -44,7 +44,7 @@ export class MachinesComponent implements OnInit{
 
     onClickEdit(id:string) {
       this.router.navigateByUrl('/edit?id='+id);
-  }
+    }
 
   onClickClone(id:string) {
     let name = prompt("Please give new Vm Name :") ;
@@ -62,23 +62,17 @@ export class MachinesComponent implements OnInit{
          window.location.reload();
     });
 }
+listvm:any[]=[]
 
-logOut(){
-    
-  localStorage.setItem('username', "");
-  window.location.reload();
-
-
-
-  
-}
-
-
-    
 
   ngOnInit(): void {
-
+    this.vmApiService.getVmList().subscribe(data=>{
+      this.listvm=data
+      console.log(this.listvm);
+      
+    })
       let username=localStorage.getItem('username');
+      
       if (username == ""){
             this.router.navigate(['login']);
         }

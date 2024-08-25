@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import { MatIcon } from '@angular/material/icon';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatToolbarModule,MatIcon],
+  imports: [RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -15,6 +14,6 @@ export class HeaderComponent {
   }
   logOut(){
     localStorage.setItem('username', "");
-    window.location.reload();
+    window.location.href="/login"
   }
 }
