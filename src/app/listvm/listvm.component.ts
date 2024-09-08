@@ -25,12 +25,13 @@ export class ListvmComponent implements OnInit {
     let name = prompt("Please give new Vm Name :") ;
     name = name==null ? "NewName" : name;
     this.showWait=true;
-    this.vmApiService.addVm(name, id).subscribe(data=>{
+    this.vmApiService.addVm(name, id).subscribe((data:any)=>{
          this.showWait=false;
          alert("Machine cloned successfully!");
          let desc = prompt("Please give a description (optional) :") ;
          desc = desc==null ? "" : desc;
-         let machine:Machine={"id":id, "name":name, "owner":this.username, "description":desc};
+         let newId = data.id;
+         let machine:Machine={"id":newId, "name":name, "owner":this.username, "description":desc};
          this.machineService.addMachine(machine).subscribe(data=>{
             alert("machine data is now saved");
          })
@@ -41,12 +42,16 @@ export class ListvmComponent implements OnInit {
 
 ngOnInit(): void {
 
+  let login= localStorage.getItem("username");
+  if (login != null )
+      this.username = login;
+
   this.vmApiService.getVmList().subscribe(data=>{
     this.listvm=data
     console.log(this.listvm);
     
   })
-
+  
 
 
 }

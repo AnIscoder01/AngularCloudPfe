@@ -27,16 +27,32 @@ export class MachineBackendService {
 	return throwError(errorMessage);
   }
    
- 
+  getAllMachines():Observable<any> {    
+    let httpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Accept':  'application/json',
+    });
+
+	  return this.httpClient.get(this.API_SERVER+"/machines", {headers: httpHeaders}).pipe(catchError(this.handleError));
+  }
+
   getMachinesByOwner(username:string):Observable<any> {    
     let httpHeaders = new HttpHeaders({
       'Content-Type':  'application/json',
       'Accept':  'application/json',
     });
-    
+
 	  return this.httpClient.get(this.API_SERVER+"/machines/"+username, {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 
+  getMachineById(id:string):Observable<any> {    
+    let httpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Accept':  'application/json',
+    });
+
+	  return this.httpClient.get(this.API_SERVER+"/machine/"+id, {headers: httpHeaders}).pipe(catchError(this.handleError));
+  }
   
 
   addMachine(machine:Machine) {

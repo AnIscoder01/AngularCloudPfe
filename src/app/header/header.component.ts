@@ -8,12 +8,15 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  constructor(private router:Router){}
+
   getUser(){
     let username=localStorage.getItem('username');
     return username;
   }
   logOut(){
     localStorage.setItem('username', "");
-    window.location.href="/login"
+    //window.location.href="/home";
+   this.router.navigate(['home']);
   }
 }

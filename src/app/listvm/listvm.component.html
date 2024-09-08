@@ -1,15 +1,21 @@
+<div>
+    <h2 style="color: antiquewhite;">Hello <span style="text-decoration: solid; color: aqua;"> {{username}}</span>  Here you find all vmware stations </h2>
 
+</div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>id</th>
+                <th>path</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody >
             @for (vm of listvm; track vm) {
-                <tr>
+                 <tr>
                     <td>{{vm.id}}</td>
+                    <td>{{vm.path}}</td>
+                    
                     <td><button (click)="onClickClone(vm.id)">Cloner</button></td>
         
                 </tr>
@@ -17,3 +23,4 @@
             
         </tbody>
     </table>
+
