@@ -35,6 +35,16 @@ export class UserBackendService {
 	  return this.httpClient.get(this.API_SERVER+"/users", {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 
+  getUsersNumber():Observable<any> {    
+    let httpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Accept':  'application/json',
+    });
+	  return this.httpClient.get(this.API_SERVER+"/nbrusers", {headers: httpHeaders}).pipe(catchError(this.handleError));
+  }
+
+  
+
   /*
   getUserById(id:string) : Observable<any> {
     let httpHeaders = new HttpHeaders({

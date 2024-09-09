@@ -36,6 +36,18 @@ export class MachineBackendService {
 	  return this.httpClient.get(this.API_SERVER+"/machines", {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 
+  getMachinesNumber():Observable<any> {    
+    let httpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Accept':  'application/json',
+    });
+
+	  return this.httpClient.get(this.API_SERVER+"/nbrmachines", {headers: httpHeaders}).pipe(catchError(this.handleError));
+  }
+
+
+
+
   getMachinesByOwner(username:string):Observable<any> {    
     let httpHeaders = new HttpHeaders({
       'Content-Type':  'application/json',

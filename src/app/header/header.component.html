@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-expand-lg  bg-dark" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg  bg-dark sticky-top"  data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/home">CloudApp</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,11 +9,18 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
        
           @if(getUser()!=""){
-           @if(getUser()=="anis"){
+           @if(getUser()=="anis"||getUser()=="malek"){
           <li class="nav-item">
             <a class="nav-link" routerLink="/listvm">List ALL Vms</a>
           </li>
         }   
+
+        @if(getUser()=="anis"||getUser()=="malek"){
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          </li>
+        }
+
           <li class="nav-item">
             <a class="nav-link" routerLink="/machines">My List</a>
           </li>

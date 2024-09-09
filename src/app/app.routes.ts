@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { ListvmComponent } from './listvm/listvm.component';
 import { HomeComponent } from './home/home.component';
 import { NoclonedlistComponent } from './noclonedlist/noclonedlist.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
     {path:"",redirectTo:"home",pathMatch:'full'},
@@ -13,5 +14,7 @@ export const routes: Routes = [
     {path:'edit',  component: EditVmComponent, title:'Edition'     },
     {path:'home',  component: HomeComponent },
     {path:'noclonedlist',  component: NoclonedlistComponent,title:'non cloné' },
-    {path:'listvm',  component: ListvmComponent }
+    {path:'listvm',  component: ListvmComponent },
+    {path:'dashboard',  component: DashboardComponent }
+    
     ];
