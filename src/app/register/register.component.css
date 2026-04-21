@@ -6,14 +6,12 @@ body {
   animation: gradientBG 12s ease infinite;
 }
 
-/* BACKGROUND ANIMATION */
 @keyframes gradientBG {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* CENTER CONTAINER */
 .min-vh-100 {
   min-height: 100vh;
   display: flex;
@@ -21,7 +19,6 @@ body {
   align-items: center;
 }
 
-/* GLASS CARD */
 .login-card {
   width: 100%;
   max-width: 420px;
@@ -41,7 +38,6 @@ body {
   box-shadow: 0 25px 80px rgba(0,0,0,0.4);
 }
 
-/* TITLE */
 .login-card h2 {
   text-align: center;
   font-size: 28px;
@@ -56,7 +52,6 @@ body {
   margin-bottom: 25px;
 }
 
-/* INPUTS */
 .login-card input {
   width: 100%;
   padding: 12px 14px;
@@ -79,7 +74,6 @@ body {
   box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
 }
 
-/* BUTTON GRADIENT ANIMATED */
 .login-card button {
   width: 100%;
   padding: 12px;
@@ -105,7 +99,6 @@ body {
   box-shadow: 0 10px 30px rgba(59,130,246,0.4);
 }
 
-/* LINK */
 .login-card a {
   color: rgba(255,255,255,0.85);
   font-size: 13px;

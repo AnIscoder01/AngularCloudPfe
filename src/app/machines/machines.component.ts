@@ -1,11 +1,9 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
-import { VMParam } from '../vmparam';
 import { Router } from '@angular/router';
 import { VmwareApiService } from '../vmware-api.service';
 import { MachineBackendService } from '../machine-backend.service';
 import { Machine } from '../machine';
+import { VMParam } from '../vmparam';
 
 @Component({
   selector: 'app-machines',
@@ -14,94 +12,114 @@ import { Machine } from '../machine';
   templateUrl: './machines.component.html',
   styleUrl: './machines.component.css'
 })
-export class MachinesComponent implements OnInit{
+export class MachinesComponent implements OnInit {
 
-  
-  listVm:any[]=[];
-  showWait:boolean=false;
-  username:string="";
+  listVm: any[] = [];
+  showWait = false;
+  username = '';
 
-  
-  constructor(private httpClient:HttpClient, private router:Router, private vmApiService:VmwareApiService, private machineService:MachineBackendService){}
+  constructor(
+    private router: Router,
+    private vmApiService: VmwareApiService,
+    private machineService: MachineBackendService
+  ) {}
 
-  
-  getNameFromPath(path:string) {
-    let filename = path.split('\\')[6];
-    let vmName = filename.split('.')[0];
-    return vmName;
-  }
+  get poweredOnCount()  { return this.listVm.filter(v => v.powerState === 'poweredOn').length; }
+  get poweredOffCount() { return this.listVm.filter(v => v.powerState !== 'poweredOn').length; }
+  get totalRamGb()      { return Math.round(this.listVm.reduce((s, v) => s + (v.memory || 0), 0) / 1024); }
 
- 
-
-    onClickDelete(id:string) {
-      this.showWait=true;
-        this.vmApiService.deleteVm(id).subscribe(data=>{
-            this.showWait=false;
-             alert("Machine deleted successfully!");
-             window.location.reload();
-        });
-    }
-
-    onClickEdit(id:string) {
-      this.router.navigateByUrl('/edit?id='+id);
-    }
-
-  onClickClone(id:string) {
-    let name = prompt("Please give new Vm Name :") ;
-    name = name==null ? "NewName" : name;
-    this.showWait=true;
-    this.vmApiService.addVm(name, id).subscribe(data=>{
-         this.showWait=false;
-         alert("Machine cloned successfully!");
-         let desc = prompt("Please give a description (optional) :") ;
-         desc = desc==null ? "" : desc;
-         let machine:Machine={"id":id, "name":name, "owner":this.username, "description":desc};
-         this.machineService.addMachine(machine).subscribe(data=>{
-            alert("machine data is now saved");
-         })
-         window.location.reload();
+  onClickDelete(id: string) {
+    if (!confirm('Are you sure you want to delete this VM?')) return;
+    this.showWait = true;
+    this.vmApiService.deleteVm(id).subscribe({
+      next: () => {
+        this.showWait = false;
+        alert('Machine deleted successfully!');
+        window.location.reload();
+      },
+      error: () => {
+        this.showWait = false;
+        alert('Error deleting VM.');
+      }
     });
+  }
+  vmName(path: string): string {
+  if (!path) return 'Unknown';
+  const parts = path.replace(/\\/g, '/').split('/');
+  const file = parts[parts.length - 1];
+  return file.replace('.vmx', '');
 }
-listvm:any[]=[]
-
-
-  ngOnInit(): void {
-    this.vmApiService.getVmList().subscribe(data=>{
-      this.listvm=data
-      console.log(this.listvm);
-      
-    })
-      let username=localStorage.getItem('username');
-      
-      if (username == ""){
-            this.router.navigate(['login']);
-        }
-
-      this.username = username==null?"":username;
-     
-      this.machineService.getMachinesByOwner(this.username).subscribe(data=>{
-        this.listVm = data;
-
-        for (let i=0; i<this.listVm.length; i++) {
-            // this.listVm[i].name = this.getNameFromPath(this.listVm[i].path);
-            this.listVm[i].ip="unknown";
-            this.vmApiService.getVmIp(this.listVm[i].id).subscribe(data=>{
-              this.listVm[i].ip=data.ip;
-            });
-           this.vmApiService.getVmById(this.listVm[i].id).subscribe(data=>{
-                let retour:VMParam;
-                retour = data;
-                let cpu = retour.cpu.processors;
-                let ram = retour.memory;
-                this.listVm[i].cpu = cpu;
-                this.listVm[i].memory = ram;
-                
-            });
-
-            
-        }
-      })
-      
+  onClickEdit(id: string) {
+    this.router.navigateByUrl('/edit?id=' + id);
   }
 
+  onClickClone(id: string) {
+    let name = prompt('Please give new VM name:') ?? 'NewName';
+    this.showWait = true;
+
+    this.vmApiService.addVm(name, id).subscribe({
+      next: (data: any) => {
+        this.showWait = false;
+        alert('Machine cloned successfully!');
+
+        let desc = prompt('Please give a description (optional):') ?? '';
+
+        const machine: Machine = { id: data.id, name, description: desc };
+
+        this.machineService.addMachine(machine).subscribe({
+          next: () => alert('Machine data is now saved.'),
+          error: () => alert('Error saving machine data.')
+        });
+
+        window.location.reload();
+      },
+      error: () => {
+        this.showWait = false;
+        alert('Error cloning VM.');
+      }
+    });
+  }
+
+ ngOnInit(): void {
+  const username = localStorage.getItem('username');
+  if (!username) { this.router.navigate(['login']); return; }
+  this.username = username;
+
+  // ✅ get only THIS user's machines from DB
+  this.machineService.getMyMachines().subscribe({
+    next: (myMachines: any[]) => {
+
+      this.listVm = myMachines;
+
+      // enrich each with VMware live data
+      this.listVm.forEach(vm => {
+        vm.ip = 'Powered Off';
+        vm.powerState = 'powered-off';
+        vm.cpu = null;
+        vm.memory = null;
+
+        this.vmApiService.getVmPowerState(vm.id).subscribe({
+          next: (d: any) => { vm.powerState = d.power_state; },
+          error: () => { vm.powerState = 'unknown'; }
+        });
+
+        this.vmApiService.getVmIp(vm.id).subscribe({
+          next: (d: any) => { vm.ip = d.ip ?? 'N/A'; },
+          error: (err: string) => {
+            vm.ip = err.includes('409') ? 'Powered Off' : 'Unavailable';
+          }
+        });
+
+        this.vmApiService.getVmById(vm.id).subscribe({
+          next: (d: VMParam) => {
+            vm.cpu = d.cpu.processors;
+            vm.memory = d.memory;
+          },
+          error: () => { vm.cpu = 'N/A'; vm.memory = 'N/A'; }
+        });
+      });
+    },
+    error: () => console.error('Failed to load user machines')
+  });
+}
 }

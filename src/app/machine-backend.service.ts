@@ -1,82 +1,52 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Machine } from './machine';
-//import { User } from './user';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class MachineBackendService {
 
-  private API_SERVER = "http://localhost:9000";      
-  
+  private API_SERVER = "http://localhost:9000";
+
   constructor(private httpClient: HttpClient) { }
 
-  
-  handleError(error: HttpErrorResponse) {	
-	let errorMessage = 'Unknown Error.';
-	if (error.error instanceof ErrorEvent) {
-		errorMessage = `Error: ${error.error.message}`;
-	}
-	else {
-		errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-	}
-		
-	return throwError(errorMessage);
-  }
-   
-  getAllMachines():Observable<any> {    
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-
-	  return this.httpClient.get(this.API_SERVER+"/machines", {headers: httpHeaders}).pipe(catchError(this.handleError));
+  handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Unknown Error.';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => errorMessage);
   }
 
-  getMachinesNumber():Observable<any> {    
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-
-	  return this.httpClient.get(this.API_SERVER+"/nbrmachines", {headers: httpHeaders}).pipe(catchError(this.handleError));
+  // ✅ ALL MACHINES
+  getAllMachines(): Observable<Machine[]> {
+    return this.httpClient.get<Machine[]>(this.API_SERVER + "/machines")
+      .pipe(catchError(this.handleError));
   }
 
-
-
-
-  getMachinesByOwner(username:string):Observable<any> {    
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-
-	  return this.httpClient.get(this.API_SERVER+"/machines/"+username, {headers: httpHeaders}).pipe(catchError(this.handleError));
+  // ✅ COUNT MACHINES  ⭐ FIXED
+  getMachinesNumber(): Observable<number> {
+    return this.httpClient.get<number>(this.API_SERVER + "/nbrmachines")
+      .pipe(catchError(this.handleError));
   }
 
-  getMachineById(id:string):Observable<any> {    
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-
-	  return this.httpClient.get(this.API_SERVER+"/machine/"+id, {headers: httpHeaders}).pipe(catchError(this.handleError));
+  // (optional but good)
+  getMachineById(id: string): Observable<Machine> {
+    return this.httpClient.get<Machine>(this.API_SERVER + "/machines/" + id)
+      .pipe(catchError(this.handleError));
   }
-  
 
-  addMachine(machine:Machine) {
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-    
-    return this.httpClient.post(this.API_SERVER+"/addmachine", machine, {headers: httpHeaders}).pipe(catchError(this.handleError));
-    
+  getMyMachines(): Observable<any[]> {
+  return this.httpClient.get<any[]>(this.API_SERVER + "/machines/my")
+    .pipe(catchError(this.handleError));
+}
+
+  addMachine(machine: Machine): Observable<any> {
+    return this.httpClient.post(this.API_SERVER + "/machines", machine)
+      .pipe(catchError(this.handleError));
   }
-  
- 
-  
 }

@@ -2,59 +2,86 @@ import { Component, OnInit } from '@angular/core';
 import { VmwareApiService } from '../vmware-api.service';
 import { Machine } from '../machine';
 import { MachineBackendService } from '../machine-backend.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-listvm',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './listvm.component.html',
   styleUrl: './listvm.component.css'
 })
 export class ListvmComponent implements OnInit {
-  listvm:any[]=[]
-  showWait=false
-  username:string="";
 
-  
+  listvm: any[] = [];
+  showWait = false;
+  username = '';
 
+  constructor(
+    private vmApiService: VmwareApiService,
+    private machineService: MachineBackendService
+  ) {}
 
-  constructor(private vmservice:VmwareApiService,private vmApiService:VmwareApiService,private machineService:MachineBackendService){}
-  
- 
-  onClickClone(id:string) {
-    let name = prompt("Please give new Vm Name :") ;
-    name = name==null ? "NewName" : name;
-    this.showWait=true;
-    this.vmApiService.addVm(name, id).subscribe((data:any)=>{
-         this.showWait=false;
-         alert("Machine cloned successfully!");
-         let desc = prompt("Please give a description (optional) :") ;
-         desc = desc==null ? "" : desc;
-         let newId = data.id;
-         let machine:Machine={"id":newId, "name":name, "owner":this.username, "description":desc};
-         this.machineService.addMachine(machine).subscribe(data=>{
-            alert("machine data is now saved");
-         })
-         window.location.reload();
+  // ── getters instead of pipes ─────────────────────────────
+  get claimedCount()   { return this.listvm.filter(v => v.isClaimed).length; }
+  get availableCount() { return this.listvm.filter(v => !v.isClaimed).length; }
+  // ─────────────────────────────────────────────────────────
+
+  vmName(path: string): string {
+    if (!path) return 'Unknown';
+    const parts = path.replace(/\\/g, '/').split('/');
+    return parts[parts.length - 1].replace('.vmx', '');
+  }
+
+  onClickClone(id: string) {
+    let name = prompt('Please give new VM name:') ?? 'NewName';
+    this.showWait = true;
+
+    this.vmApiService.addVm(name, id).subscribe({
+      next: (data: any) => {
+        this.showWait = false;
+        alert('Machine cloned successfully!');
+
+        let desc = prompt('Please give a description (optional):') ?? '';
+        const machine: Machine = { id: data.id, name, description: desc };
+
+        this.machineService.addMachine(machine).subscribe({
+          next: () => alert('Machine data is now saved.'),
+          error: () => alert('Error saving machine data.')
+        });
+
+        window.location.reload();
+      },
+      error: () => {
+        this.showWait = false;
+        alert('Error cloning VM.');
+      }
     });
-}
+  }
 
+  ngOnInit(): void {
+    this.username = localStorage.getItem('username') ?? '';
 
-ngOnInit(): void {
+    this.vmApiService.getVmList().subscribe({
+      next: (vmList: any[]) => {  // ← explicit any[] type
 
-  let login= localStorage.getItem("username");
-  if (login != null )
-      this.username = login;
+        this.machineService.getAllMachines().subscribe({
+          next: (dbMachines: any[]) => {
 
-  this.vmApiService.getVmList().subscribe(data=>{
-    this.listvm=data
-    console.log(this.listvm);
-    
-  })
-  
-
-
-}
-
-
+            this.listvm = vmList.map((vm: any) => {  // ← explicit any type
+              const match = dbMachines.find((m: any) => m.id === vm.id);
+              return {
+                ...vm,
+                clonedBy: match?.owner?.username ?? null,
+                description: match?.description ?? null,
+                isClaimed: !!match
+              };
+            });
+          },
+          error: () => console.error('Failed to load DB machines')
+        });
+      },
+      error: () => console.error('Failed to load VM list')
+    });
+  }
 }

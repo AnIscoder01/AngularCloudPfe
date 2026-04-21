@@ -1,40 +1,78 @@
-<div>
-    <h2 style="color: antiquewhite;">Hello <span style="text-decoration: solid; color: aqua;"> {{username}}</span>  Here your own Vmware station that you cloned </h2>
+<div style="padding: 1.5rem;">
+
+  <div class="page-header">
+    <h2>Hello, <span class="username">{{username}}</span> — your cloned machines</h2>
+    <p>Manage, edit, delete or clone your VMware instances below.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total VMs</div>
+      <div class="stat-value">{{ listVm.length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Powered on</div>
+      <div class="stat-value on">{{ poweredOnCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Powered off</div>
+      <div class="stat-value off">{{ poweredOffCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total RAM</div>
+      <div class="stat-value blue">{{ totalRamGb }} GB</div>
+    </div>
+  </div>
+
+  @if (showWait) {
+    <div class="wait-wrap">
+      <div class="spinner"></div>
+      <p style="font-size:13px; color:#888; margin-top:8px;">Processing, please wait...</p>
+    </div>
+  }
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">VM name</th>
+          <th style="width:10%">CPU</th>
+          <th style="width:10%">RAM</th>
+          <th style="width:15%">IP address</th>
+          <th style="width:13%">State</th>
+          <th style="width:30%">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vm of listVm; track vm.id) {
+          <tr>
+            <td>
+              <div class="vm-name">{{ vmName(vm.path) }}</div>
+              <div class="vm-id">{{ vm.id }}</div>
+            </td>
+            <td><span class="chip">{{ vm.cpu ?? '...' }} cores</span></td>
+            <td><span class="chip">{{ vm.memory ?? '...' }} MB</span></td>
+            <td class="ip-text">{{ vm.ip }}</td>
+            <td>
+              @if (vm.powerState === 'poweredOn') {
+                <span class="badge badge-on"><span class="dot dot-on"></span>On</span>
+              } @else if (vm.powerState === 'powered-off') {
+                <span class="badge badge-off"><span class="dot dot-off"></span>Off</span>
+              } @else {
+                <span class="badge badge-unknown"><span class="dot dot-unknown"></span>{{ vm.powerState }}</span>
+              }
+            </td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-info" (click)="onClickEdit(vm.id)">Edit</button>
+                <button class="btn btn-danger" (click)="onClickDelete(vm.id)">Delete</button>
+                <button class="btn btn-clone" (click)="onClickClone(vm.id)">Clone</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
 </div>
-<table class="table table-striped" >
-  <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>CPU</th>
-        <th>RAM</th>
-        <th>IP</th>
-        <th>Edit</th>
-        <th>Delete</th>
-        <th>Clone</th>
-    </tr>
-</thead> 
-<tbody>
-    @for (vm of listVm; track vm) {
-        <tr>
-            <td>{{vm.id}}</td>
-            <td>{{vm.name}}</td>
-            <td><input value={{vm.cpu}} disabled="edition[vm.id]"></td>
-            <td><input value={{vm.memory}} disabled="edition[vm.id]"></td>
-            <td>{{vm.ip}}</td>
-            <td><button  (click)="onClickEdit(vm.id)">Edit</button></td>
-            <td><button  (click)="onClickDelete(vm.id)">Delete</button></td>
-            <td><button (click)="onClickClone(vm.id)">Cloner</button></td>
-
-        </tr>
-    }
-</tbody>
-</table>
-
-@if (showWait) {
-    <img src="/wait.gif" style="display:block; margin-left: auto; margin-right: auto;" >
-    } 
-    @else {
-    <img src="/wait.gif" style="display:none;" />
-    }

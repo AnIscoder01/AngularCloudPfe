@@ -1,26 +1,74 @@
-<div>
-    <h2 style="color: antiquewhite;">Hello <span style="text-decoration: solid; color: aqua;"> {{username}}</span>  Here you find all vmware stations </h2>
+<div style="padding: 1.5rem;">
+
+  <div class="page-header">
+    <h2>Hello, <span class="username">{{ username }}</span> — all VMware stations</h2>
+    <p>Browse all available VMs. Claimed VMs show their owner.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total VMs</div>
+      <div class="stat-value">{{ listvm.length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Claimed</div>
+      <div class="stat-value green">{{ claimedCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Available</div>
+      <div class="stat-value blue">{{ availableCount }}</div>
+    </div>
+  </div>
+
+  @if (showWait) {
+    <div class="wait-wrap">
+      <div class="spinner"></div>
+      <p style="font-size:13px; color:#888; margin-top:8px;">Cloning VM, please wait...</p>
+    </div>
+  }
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30%">VM name</th>
+          <th style="width:25%">Path</th>
+          <th style="width:20%">Owner</th>
+          <th style="width:25%">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vm of listvm; track vm.id) {
+          <tr>
+            <td>
+              <div class="vm-name">{{ vmName(vm.path) }}</div>
+              <div class="vm-id">{{ vm.id }}</div>
+            </td>
+            <td class="vm-path">{{ vm.path }}</td>
+            <td>
+              @if (vm.isClaimed) {
+                <span class="owner-badge">
+                  <span class="owner-dot"></span>
+                  {{ vm.clonedBy }}
+                </span>
+              } @else {
+                <span class="free-badge">
+                  <span class="free-dot"></span>
+                  Available
+                </span>
+              }
+            </td>
+            <td>
+              @if (!vm.isClaimed) {
+                <button class="btn-clone" (click)="onClickClone(vm.id)">Clone</button>
+              } @else {
+                <span class="claimed-text">Already cloned</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
 </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>path</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody >
-            @for (vm of listvm; track vm) {
-                 <tr>
-                    <td>{{vm.id}}</td>
-                    <td>{{vm.path}}</td>
-                    
-                    <td><button (click)="onClickClone(vm.id)">Cloner</button></td>
-        
-                </tr>
-            }
-            
-        </tbody>
-    </table>
-

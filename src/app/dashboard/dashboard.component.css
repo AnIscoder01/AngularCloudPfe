@@ -1,0 +1,49 @@
+.dash-page {
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.45); /* dark overlay over blue bg */
+  min-height: 100vh;
+  backdrop-filter: blur(2px);
+}
+
+.stat-card {
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255,255,255,0.2); /* more visible border */
+  transition: transform 0.2s;
+  backdrop-filter: blur(12px);
+}
+
+.stat-card.blue   { background: rgba(55,138,221,0.35); }  /* more opaque */
+.stat-card.green  { background: rgba(29,158,117,0.35); }
+.stat-card.purple { background: rgba(139,92,246,0.35); }
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;        /* bolder */
+  color: #ffffff;          /* pure white */
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4); /* subtle shadow for depth */
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75); /* brighter label */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.dash-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.dash-header p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 4px;
+}

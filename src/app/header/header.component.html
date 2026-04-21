@@ -1,53 +1,71 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
 
-<nav class="navbar navbar-expand-lg  bg-dark sticky-top"  data-bs-theme="dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/home">CloudApp</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-       
-          @if(getUser()!=""){
-           @if(getUser()=="anis"||getUser()=="malek"){
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/listvm">List ALL Vms</a>
-          </li>
-        }   
+  <div class="container-fluid">
 
-        @if(getUser()=="anis"||getUser()=="malek"){
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-          </li>
-        }
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" routerLink="/home">
+      CloudApp
+    </a>
+
+    <!-- Toggle -->
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+
+      <!-- Left menu -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        @if(getUser() != "") {
+
+          @if(getUser()=="anis" || getUser()=="malek") {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/listvm">All VMs</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+            </li>
+          }
 
           <li class="nav-item">
-            <a class="nav-link" routerLink="/machines">My List</a>
+            <a class="nav-link" routerLink="/machines">My VMs</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link" routerLink="/noclonedlist">Find VM</a>
           </li>
-        }
-        </ul>
-        <form class="d-flex" role="search">
-            
-          @if(getUser()!=""){
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-       
-                
-                <li class="nav-item">
-                  <a class="nav-link" routerLink="/machines">{{getUser()}}</a>
-                </li>
-            
-              </ul>
-            <button  class="btn btn-outline-success" (click)="logOut()">logout</button>
-            
-            }
-            @else {
-            <a class="btn btn-outline-success" routerLink="/login">login</a>
 
-            }  
-        </form>
+        }
+
+      </ul>
+
+      <!-- Right side -->
+      <div class="d-flex align-items-center gap-2">
+
+        @if(getUser() != "") {
+
+          <span class="navbar-text text-light me-2">
+            👤 {{ getUser() }}
+          </span>
+
+          <button class="btn btn-outline-light btn-sm" (click)="logOut()">
+            Logout
+          </button>
+
+        } @else {
+
+          <a class="btn btn-success btn-sm" routerLink="/login">
+            Login
+          </a>
+
+        }
+
       </div>
+
     </div>
-  </nav>
+  </div>
+</nav>

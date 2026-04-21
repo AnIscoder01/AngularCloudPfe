@@ -1,11 +1,119 @@
-p,h2{
-    text-align: center;
-    vertical-align: middle;
-    line-height: 90px; 
-    padding-top: 10%;
-    padding-left: 10%;
-    padding-right: 10%;
-    color:rgb(216, 196, 156);
+/* =========================
+   GLOBAL HOME STYLE
+========================= */
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a, #0ea5e9);
+  background-size: 300% 300%;
+  animation: bgMove 12s ease infinite;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: white;
 }
 
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
+/* =========================
+   HERO SECTION
+========================= */
+.hero {
+  padding: 90px 20px 50px;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+/* background glow behind text */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent);
+  filter: blur(40px);
+  z-index: 0;
+}
+
+/* keep text above effect */
+.hero h2,
+.hero p {
+  position: relative;
+  z-index: 1;
+}
+/* =========================
+   CARDS (MODERN SAAS STYLE)
+========================= */
+.card {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transition: all 0.35s ease;
+  color: white;
+}
+
+/* hover premium */
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+}
+
+/* =========================
+   CARD IMAGES (FIX PRO)
+========================= */
+.card img {
+  width: 100%;
+  height: 210px;              /* uniform height */
+  object-fit: cover;          /* crop intelligent */
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+/* zoom smooth */
+.card:hover img {
+  transform: scale(1.10);
+}
+
+/* =========================
+   CARD BODY
+========================= */
+.card-body {
+  background: rgba(15, 23, 42, 0.75) !important;
+  padding: 18px;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.card-text {
+  font-size: 13px;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+/* =========================
+   GRID
+========================= */
+.row {
+  padding: 0 30px;
+}
+
+/* =========================
+   LINKS (IMAGE CLICK AREA)
+========================= */
+.card a {
+  display: block;
+  overflow: hidden;
+}

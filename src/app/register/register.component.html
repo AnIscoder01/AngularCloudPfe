@@ -1,0 +1,50 @@
+<div class="container min-vh-100">
+
+  <form class="login-card" (ngSubmit)="register()">
+
+    <h2>Create Account</h2>
+    <p>Join CloudApp today</p>
+
+    <input
+      name="username"
+      type="text"
+      placeholder="Username"
+      [(ngModel)]="username"
+      required
+    >
+
+    <input
+      name="email"
+      type="email"
+      placeholder="Email address"
+      [(ngModel)]="email"
+      required
+    >
+
+    <input
+      name="password"
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+      required
+    >
+
+    <input
+      name="confirmPassword"
+      type="password"
+      placeholder="Confirm password"
+      [(ngModel)]="confirmPassword"
+      required
+    >
+
+    <button type="submit">
+      Create Account
+    </button>
+
+    <div class="text-center mt-3">
+      Already have an account? <a routerLink="/login">Login</a>
+    </div>
+
+  </form>
+
+</div>

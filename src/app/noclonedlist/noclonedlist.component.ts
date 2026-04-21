@@ -1,170 +1,139 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MachineBackendService } from '../machine-backend.service';
 import { VmwareApiService } from '../vmware-api.service';
-import { HttpClient } from '@angular/common/http';
-import { VMParam } from '../vmparam';
 import { Machine } from '../machine';
+import { VMParam } from '../vmparam';
 
 @Component({
   selector: 'app-noclonedlist',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './noclonedlist.component.html',
   styleUrl: './noclonedlist.component.css'
 })
 export class NoclonedlistComponent implements OnInit {
 
+  listvm: any[] = [];
+  bdlist: any[] = [];
+  newlist: any[] = [];
 
+  showWait = false;
+  username = "";
 
-  constructor(private httpClient: HttpClient, private machineservice: MachineBackendService, private vmapiservice: VmwareApiService) { }
+  constructor(
+    private machineservice: MachineBackendService,
+    private vmapiservice: VmwareApiService
+  ) {}
 
-
-  listvm: any[] = []
-  bdlist: any[] = []
-  exist: boolean = true
-  newlist: any[] = []
-  k: any = 0
-
-  getNameFromPath(path: string) {
-    let filename = path.split('\\')[6];
-    let vmName = filename.split('.')[0];
-    return vmName;
+  // ── computed getters for stats row ──────────────────────────
+  get poweredOnCount(): number {
+    return this.newlist.filter(v => v.powerState === 'poweredOn').length;
   }
+
+  get poweredOffCount(): number {
+    return this.newlist.filter(v => v.powerState !== 'poweredOn').length;
+  }
+
+  vmName(path: string): string {
+    if (!path) return 'Unknown';
+    const parts = path.replace(/\\/g, '/').split('/');
+    const file = parts[parts.length - 1];
+    return file.replace('.vmx', '');
+  }
+  // ────────────────────────────────────────────────────────────
+
   onClickClone(id: string) {
-    let name = prompt("Please give new Vm Name :");
-    name = name == null ? "NewName" : name;
+    let name = prompt("Please give new VM name:") ?? "NewName";
     this.showWait = true;
-    this.vmapiservice.addVm(name, id).subscribe((data:any)=> {
-      console.log(data);
-      
-      this.showWait = false;
-      alert("Machine cloned successfully!");
-      let desc = prompt("Please give a description (optional) :");
-      desc = desc == null ? "" : desc;
-      let machine: Machine = { "id": data.id, "name": name, "owner": this.username, "description": desc };
-      this.machineservice.addMachine(machine).subscribe(data => {
-        alert("machine data is now saved");
-      })
-      window.location.reload();
+
+    this.vmapiservice.addVm(name, id).subscribe({
+      next: (data: any) => {
+        this.showWait = false;
+        alert("Machine cloned successfully!");
+
+        let desc = prompt("Please give a description (optional):") ?? "";
+
+        const machine: Machine = {
+          id: data.id,
+          name: name,
+          description: desc
+        };
+
+        this.machineservice.addMachine(machine).subscribe({
+          next: () => alert("Machine data is now saved."),
+          error: () => alert("Error saving machine data.")
+        });
+
+        window.location.reload();
+      },
+      error: () => {
+        this.showWait = false;
+        alert("Error cloning VM. Please try again.");
+      }
     });
   }
-  showWait: boolean = false;
-  username: string = "";
 
   ngOnInit(): void {
-    let username = localStorage.getItem('username');
+    this.username = localStorage.getItem('username') ?? "";
 
-    this.username = username == null ? "" : username;
+    this.vmapiservice.getVmList().subscribe({
+      next: vms => {
+        this.listvm = vms;
 
+        this.machineservice.getAllMachines().subscribe({
+          next: bd => {
+            this.bdlist = bd;
 
+            // filter only VMs not yet saved in DB
+            this.newlist = this.listvm.filter(vm =>
+              !this.bdlist.some(b => b.id === vm.id)
+            );
 
+            // enrich each VM with details
+            this.newlist.forEach(vm => {
+              vm.ip = 'Powered Off';
+              vm.powerState = 'powered-off';
+              vm.cpu = null;
+              vm.memory = null;
 
+              // power state
+              this.vmapiservice.getVmPowerState(vm.id).subscribe({
+                next: (d: any) => {
+                  vm.powerState = d.power_state;
+                },
+                error: () => {
+                  vm.powerState = 'unknown';
+                }
+              });
 
-// get local machine  from api
-    this.vmapiservice.getVmList().subscribe(data => {
-      this.listvm = data
-      //get from database
-      this.machineservice.getAllMachines().subscribe(data => {
+              // IP — 409 = VM is off
+              this.vmapiservice.getVmIp(vm.id).subscribe({
+                next: (d: any) => {
+                  vm.ip = d.ip ?? 'N/A';
+                },
+                error: (err: string) => {
+                  vm.ip = err.includes('409') ? 'Powered Off' : 'Unavailable';
+                }
+              });
 
-        this.bdlist = data
-
-        // Boucle à travers les éléments de listvm
-        for (let i = 0; i < this.listvm.length; i++) {
-          let exist = false;
-
-          // Boucle à travers les éléments de bdlist
-          for (let j = 0; j < this.bdlist.length; j++) {
-            if (this.bdlist[j].id === this.listvm[i].id) {
-              exist = true;
-              break; // Sortir de la boucle dès que l'élément est trouvé
-
-
-            }
-          }
-          // Si l'élément n'existe pas dans bdlist, l'ajouter à newlist
-          if (!exist) {
-            this.newlist.push(this.listvm[i]);
-          }
-
-
-
-
-
-          for (let i = 0; i < this.newlist.length; i++) {
-            // this.listVm[i].name = this.getNameFromPath(this.listVm[i].path);
-            this.newlist[i].ip = "unknown";
-            this.vmapiservice.getVmIp(this.newlist[i].id).subscribe(data => {
-              this.newlist[i].ip = data.ip;
+              // CPU and memory
+              this.vmapiservice.getVmById(vm.id).subscribe({
+                next: (d: VMParam) => {
+                  vm.cpu = d.cpu.processors;
+                  vm.memory = d.memory;
+                },
+                error: () => {
+                  vm.cpu = 'N/A';
+                  vm.memory = 'N/A';
+                }
+              });
             });
-            this.vmapiservice.getVmById(this.newlist[i].id).subscribe(data => {
-              console.log(data);
-
-              let retour: VMParam;
-              retour = data;
-              let cpu = retour.cpu.processors;
-              let ram = retour.memory;
-              this.newlist[i].path = this.listvm[i].name = this.getNameFromPath(this.listvm[i].path);
-              this.newlist[i].cpu = cpu;
-              this.newlist[i].memory = ram;
-
-            });
-          }
-
-        }
-      }, (error) =>{
- // Boucle à travers les éléments de listvm
- for (let i = 0; i < this.listvm.length; i++) {
-  let exist = false;
-
-  // Boucle à travers les éléments de bdlist
-  for (let j = 0; j < this.bdlist.length; j++) {
-    if (this.bdlist[j].id === this.listvm[i].id) {
-      exist = true;
-      break; // Sortir de la boucle dès que l'élément est trouvé
-
-
-    }
-  }
-  // Si l'élément n'existe pas dans bdlist, l'ajouter à newlist
-  if (!exist) {
-    this.newlist.push(this.listvm[i]);
-  }
-
-
-
-
-
-  for (let i = 0; i < this.newlist.length; i++) {
-    // this.listVm[i].name = this.getNameFromPath(this.listVm[i].path);
-    this.newlist[i].ip = "unknown";
-    this.vmapiservice.getVmIp(this.newlist[i].id).subscribe(data => {
-      this.newlist[i].ip = data.ip;
+          },
+          error: () => console.error('Failed to load machines from DB')
+        });
+      },
+      error: () => console.error('Failed to load VM list from VMware')
     });
-    this.vmapiservice.getVmById(this.newlist[i].id).subscribe(data => {
-      console.log(data);
-
-      let retour: VMParam;
-      retour = data;
-      let cpu = retour.cpu.processors;
-      let ram = retour.memory;
-      this.newlist[i].path = this.listvm[i].name = this.getNameFromPath(this.listvm[i].path);
-      this.newlist[i].cpu = cpu;
-      this.newlist[i].memory = ram;
-
-    });
-  }
-
-}
-      })
-
-
-    })
-
-
-
-
-
-
-
   }
 }

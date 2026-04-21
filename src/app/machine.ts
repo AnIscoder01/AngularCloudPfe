@@ -1,6 +1,8 @@
+import { User } from "./user";
+
 export interface Machine {
-    id:String;
-    name:string;
-    owner:string;
-    description:string;
+  id: string;
+  name: string;
+  description: string;
+  owner?: User; 
 }

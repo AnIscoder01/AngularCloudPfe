@@ -1,12 +1,35 @@
-<div class="container d-flex">
+<div class="container min-vh-100">
+
+  <form class="login-card" (ngSubmit)="verifyLogin()">
+
+    <h2>Welcome Back 👋</h2>
+    <p>Login to CloudApp</p>
+
+    <input
+      name="username"
+      type="text"
+      placeholder="Username"
+      [(ngModel)]="username"
+    >
+
+    <input
+      name="password"
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+    >
+
+    <button type="submit">
+      Login
+    </button>
+
+    <div class="text-center mt-3">
+      <a href="#">Forgot password?</a>
+    </div>
+    <div class="text-center mt-2">
+  Don't have an account? <a routerLink="/register">Register</a>
 </div>
-<form class="login">
-  <h2>Welcome, to CloudApp!</h2>
-  <p>Please log in</p>
-  <input  name="username" type="text" placeholder="Username" [(ngModel)]="username">
-  <input name="password" type="password" placeholder="Password" [(ngModel)]="password">
-  <button  type="submit"  class="btn btn-primary" (click)="verifyLogin()" >login </button>
-  <div class="links">
-    <a href="#">Forgot password</a>
-  </div>
-</form>
+
+  </form>
+
+</div>

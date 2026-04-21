@@ -1,37 +1,76 @@
-<div>
-    <h2 style="color: antiquewhite;">Hello, <span style="text-decoration: solid; color: aqua;"> {{username}}</span>  here you found models of Vmware station that you can add to your Vmware list </h2>
+<div style="padding: 1.5rem;">
+
+  <div class="page-header">
+    <h2>Hello, <span class="username">{{username}}</span> — available VM models</h2>
+    <p>Select a template below and clone it to add it to your VM list.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Available templates</div>
+      <div class="stat-value">{{ newlist.length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Powered on</div>
+      <div class="stat-value on">{{ poweredOnCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Powered off</div>
+      <div class="stat-value off">{{ poweredOffCount }}</div>
+    </div>
+  </div>
+
+  @if (showWait) {
+    <div class="wait-wrap">
+      <div class="spinner"></div>
+      <p style="color:#888; font-size:13px;">Cloning VM, please wait...</p>
+    </div>
+  }
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30%">VM name</th>
+          <th style="width:12%">RAM</th>
+          <th style="width:8%">CPU</th>
+          <th style="width:18%">IP address</th>
+          <th style="width:14%">Power state</th>
+          <th style="width:18%">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (nevm of newlist; track nevm.id) {
+          <tr>
+            <td>
+              <div class="vm-name">{{ vmName(nevm.path) }}</div>
+              <div class="vm-path">{{ nevm.path }}</div>
+            </td>
+            <td>
+              <span class="chip">{{ nevm.memory ?? '...' }} MB</span>
+            </td>
+            <td>
+              <span class="chip">{{ nevm.cpu ?? '...' }}</span>
+            </td>
+            <td style="font-family:monospace; font-size:12px;">
+              {{ nevm.ip }}
+            </td>
+            <td>
+              @if (nevm.powerState === 'poweredOn') {
+                <span class="badge badge-on"><span class="dot dot-on"></span>On</span>
+              } @else if (nevm.powerState === 'powered-off') {
+                <span class="badge badge-off"><span class="dot dot-off"></span>Off</span>
+              } @else {
+                <span class="badge badge-unknown"><span class="dot dot-unknown"></span>{{ nevm.powerState }}</span>
+              }
+            </td>
+            <td>
+              <button class="btn-clone" (click)="onClickClone(nevm.id)">Clone</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
 </div>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Ram</th>
-            <th>Cpu</th>
-            <th>Action</th>
-
-        </tr>
-    </thead>
-    <tbody >
-
-   @for (nevm of newlist; track nevm) {
-        <tr>
-            <td>{{nevm.path}}</td>
-
-           <td>{{nevm.memory}}</td>
-           <td>{{nevm.cpu}}</td>
-           <td><button (click)="onClickClone(nevm.id)">Clone</button></td>
-
-
-       </tr>
-   } 
-        
-    </tbody>
-</table>
-@if (showWait) {
-    <img src="/wait.gif" style="display:block; margin-left: auto; margin-right: auto;" >
-    } 
-    @else {
-    <img src="/wait.gif" style="display:none;" />
-    }
-

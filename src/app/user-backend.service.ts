@@ -45,16 +45,6 @@ export class UserBackendService {
 
   
 
-  /*
-  getUserById(id:string) : Observable<any> {
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
-    return this.httpClient.get(this.API_SERVER+"/vms/"+id, {headers: httpHeaders}).pipe(catchError(this.handleError));
-  }
-    */
-
   addUser(user:User) {
     let httpHeaders = new HttpHeaders({
       'Content-Type':  'application/json',
@@ -65,6 +55,16 @@ export class UserBackendService {
     
   }
   
+  /*
+  getUserById(id:string) : Observable<any> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Accept':  'application/json',
+    });
+    return this.httpClient.get(this.API_SERVER+"/vms/"+id, {headers: httpHeaders}).pipe(catchError(this.handleError));
+  }
+    */
+
   /*
   updateUser(id:number, user:User) {
     let httpHeaders = new HttpHeaders({
@@ -77,15 +77,29 @@ export class UserBackendService {
   }
     */
 
-  verifyUser(username:string, password:string) {
-    let httpHeaders = new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Accept':  'application/json',
-    });
+  // verifyUser(username:string, password:string) {
+  //   let httpHeaders = new HttpHeaders({
+  //     'Content-Type':  'application/json',
+  //     'Accept':  'application/json',
+  //   });
   
-    return this.httpClient.get(this.API_SERVER+"/verifyuser?username="+username+"&password="+password, {headers: httpHeaders}).pipe(catchError(this.handleError));
-  }
+  //   return this.httpClient.get(this.API_SERVER+"/verifyuser?username="+username+"&password="+password, {headers: httpHeaders}).pipe(catchError(this.handleError));
+  // }
 
+login(username: string, password: string): Observable<any> {
+  return this.httpClient.post(
+    this.API_SERVER + "/api/auth/signin",
+    {
+      username,
+      password
+    }
+  ).pipe(catchError(this.handleError));
+}
+
+  register(payload: { username: string; email: string; password: string; role: string[] }): Observable<any> {
+  return this.httpClient.post(this.API_SERVER + '/api/auth/signup', payload)
+    .pipe(catchError(this.handleError));
+}
   deleteUser(id:number) {
     let httpHeaders = new HttpHeaders({
       'Content-Type':  'application/json',
