@@ -8,7 +8,7 @@ import { Machine } from './machine';
 })
 export class MachineBackendService {
 
-  private API_SERVER = "http://localhost:9000";
+  private API_SERVER = ""; 
 
   constructor(private httpClient: HttpClient) { }
 
@@ -23,10 +23,10 @@ export class MachineBackendService {
   }
 
   // ✅ ALL MACHINES
-  getAllMachines(): Observable<Machine[]> {
-    return this.httpClient.get<Machine[]>(this.API_SERVER + "/machines")
-      .pipe(catchError(this.handleError));
-  }
+getAllMachines(): Observable<Machine[]> {
+  return this.httpClient.get<Machine[]>(this.API_SERVER + "/machines")  // ← no trailing slash
+    .pipe(catchError(this.handleError));
+}
 
   // ✅ COUNT MACHINES  ⭐ FIXED
   getMachinesNumber(): Observable<number> {

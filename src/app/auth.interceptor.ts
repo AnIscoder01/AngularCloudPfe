@@ -2,13 +2,15 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  // Skip JWT for VMware API calls — they use Basic auth
-  const isVmwareRequest = req.url.includes('/api/vms') || req.url.includes('/api/vms/');
-    if (isVmwareRequest) return next(req);
+  // skip auth endpoints — they don't need a token
+  const isAuthRequest = req.url.includes('/api/auth/');
+  if (isAuthRequest) return next(req);
 
   const token = localStorage.getItem('token');
+  console.log('Interceptor firing for:', req.url);
+  console.log('Token:', token);
 
-  if (token && token !== "undefined") {
+  if (token && token !== 'undefined') {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

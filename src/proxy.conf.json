@@ -1,11 +1,11 @@
 {
-  "/api/auth/": {
+  "/api/": {
     "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true
   },
-  "/api/": {
-    "target": "http://127.0.0.1:8697",
+  "/vmware/": {
+    "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true
   }

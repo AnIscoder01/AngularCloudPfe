@@ -9,7 +9,7 @@ import { User } from './user';
 })
 export class UserBackendService {
 
-  private API_SERVER = "http://localhost:9000";      
+  private API_SERVER = "";
   
   constructor(private httpClient: HttpClient) { }
 

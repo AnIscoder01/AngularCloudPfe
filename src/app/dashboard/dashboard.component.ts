@@ -35,19 +35,14 @@ export class DashboardComponent implements OnInit {
     if (this.nbrusers === 0) return 0;
     return Math.min((this.nbrmachines / (this.nbrusers * 5)) * 100, 100);
   }
-
-  private isAdminFromToken(): boolean {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      // roles may be in different fields depending on your JWT setup
-      const roles: string[] = payload.roles || payload.authorities || [];
-      return roles.includes('ROLE_ADMIN');
-    } catch {
-      return false;
-    }
+private isAdminFromToken(): boolean {
+  try {
+    const roles: string[] = JSON.parse(localStorage.getItem('roles') || '[]');
+    return roles.includes('ROLE_ADMIN');
+  } catch {
+    return false;
   }
+}
 
   ngOnInit() {
     this.username = localStorage.getItem('username') ?? '';

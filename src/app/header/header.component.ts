@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -8,15 +9,28 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  constructor(private router:Router){}
 
-  getUser(){
-    let username=localStorage.getItem('username');
-    return username;
+  constructor(private router: Router) {}
+
+  getUser(): string {
+    return localStorage.getItem('username') ?? '';
   }
-  logOut(){
-    localStorage.setItem('username', "");
-    //window.location.href="/home";
-   this.router.navigate(['home']);
+
+  isAdmin(): boolean {
+    try {
+      const roles: string[] = JSON.parse(localStorage.getItem('roles') || '[]');
+      return roles.includes('ROLE_ADMIN');
+    } catch {
+      return false;
+    }
+  }
+
+  isLoggedIn(): boolean {
+    return this.getUser() !== '' && this.getUser() !== null;
+  }
+
+  logOut() {
+    localStorage.clear(); // ← clear everything including roles and token
+    this.router.navigate(['home']);
   }
 }

@@ -24,18 +24,12 @@ export class LoginComponent {
 verifyLogin() {
   this.userService.login(this.username, this.password).subscribe({
     next: (data) => {
-
       console.log("LOGIN RESPONSE:", data);
-
       const token = data.token || data.accessToken || data.jwt;
-
-      // ✅ FIX HERE
       localStorage.setItem('token', token);
-
       localStorage.setItem('username', data.username);
-
+      localStorage.setItem('roles', JSON.stringify(data.roles)); // ← add this
       console.log("Saved token:", token);
-
       this.router.navigate(['machines']);
     },
     error: (err) => {
