@@ -34,8 +34,8 @@
           <th style="width:30%">VM name</th>
           <th style="width:12%">RAM</th>
           <th style="width:8%">CPU</th>
-          <th style="width:18%">IP address</th>
-          <th style="width:14%">Power state</th>
+          <!-- <th style="width:18%">IP address</th>
+          <th style="width:14%">Power state</th> -->
           <th style="width:18%">Action</th>
         </tr>
       </thead>
@@ -52,7 +52,7 @@
             <td>
               <span class="chip">{{ nevm.cpu ?? '...' }}</span>
             </td>
-            <td style="font-family:monospace; font-size:12px;">
+            <!-- <td style="font-family:monospace; font-size:12px;">
               {{ nevm.ip }}
             </td>
             <td>
@@ -63,7 +63,7 @@
               } @else {
                 <span class="badge badge-unknown"><span class="dot dot-unknown"></span>{{ nevm.powerState }}</span>
               }
-            </td>
+            </td> -->
             <td>
               <button class="btn-clone" (click)="onClickClone(nevm.id)">Clone</button>
             </td>

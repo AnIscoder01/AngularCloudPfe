@@ -79,7 +79,61 @@ export class MachinesComponent implements OnInit {
       }
     });
   }
+onClickPowerOn(id: string) {
+  this.showWait = true;
+  this.vmApiService.powerVmOn(id).subscribe({
+    next: () => {
+      this.showWait = false;
+      const vm = this.listVm.find(v => v.id === id);
+      if (vm) {
+        vm.powerState = 'poweredOn';
+        vm.ip = 'Booting...';
 
+        // poll for IP every 10 seconds up to 2 minutes
+        let attempts = 0;
+        const maxAttempts = 12;
+        const interval = setInterval(() => {
+          attempts++;
+          this.vmApiService.getVmIp(id).subscribe({
+            next: (d: any) => {
+              if (d.ip) {
+                vm.ip = d.ip;
+                clearInterval(interval); // ← stop polling once we have IP
+              }
+            },
+            error: () => {
+              vm.ip = attempts >= maxAttempts ? 'Unavailable' : 'Booting...';
+              if (attempts >= maxAttempts) clearInterval(interval);
+            }
+          });
+        }, 10000); // check every 10 seconds
+      }
+    },
+    error: () => {
+      this.showWait = false;
+      alert('Error powering on VM.');
+    }
+  });
+}
+
+onClickPowerOff(id: string) {
+  if (!confirm('Are you sure you want to power off this VM?')) return;
+  this.showWait = true;
+  this.vmApiService.powerVmOff(id).subscribe({
+    next: () => {
+      this.showWait = false;
+      const vm = this.listVm.find(v => v.id === id);
+      if (vm) {
+        vm.powerState = 'powered-off';
+        vm.ip = 'Powered Off';
+      }
+    },
+    error: () => {
+      this.showWait = false;
+      alert('Error powering off VM.');
+    }
+  });
+}
  ngOnInit(): void {
   const username = localStorage.getItem('username');
   if (!username) { this.router.navigate(['login']); return; }

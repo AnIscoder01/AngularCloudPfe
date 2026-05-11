@@ -144,3 +144,60 @@ tbody td {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-power-on {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 8px;
+  border: 0.5px solid #1D9E75;
+  background: rgba(29,158,117,0.15);
+  font-size: 12px;
+  color: #1D9E75;
+  cursor: pointer;
+}
+
+.btn-power-on:hover { background: rgba(29,158,117,0.25); }
+
+.btn-power-off {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 8px;
+  border: 0.5px solid #E24B4A;
+  background: rgba(226,75,74,0.15);
+  font-size: 12px;
+  color: #E24B4A;
+  cursor: pointer;
+}
+
+.btn-power-off:hover { background: rgba(226,75,74,0.25); }
+
+.access-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(29,158,117,0.08);
+  border-radius: 8px;
+  margin: 4px 0;
+  border: 0.5px solid rgba(29,158,117,0.2);
+}
+
+.access-label {
+  font-size: 12px;
+  color: #888;
+}
+
+.ssh-cmd {
+  font-family: monospace;
+  font-size: 13px;
+  color: #1D9E75;
+  background: rgba(29,158,117,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.access-row td {
+  padding: 0 14px 8px 14px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+}

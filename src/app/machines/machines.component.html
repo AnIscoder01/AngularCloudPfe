@@ -35,12 +35,12 @@
     <table>
       <thead>
         <tr>
-          <th style="width:22%">VM name</th>
-          <th style="width:10%">CPU</th>
-          <th style="width:10%">RAM</th>
-          <th style="width:15%">IP address</th>
-          <th style="width:13%">State</th>
-          <th style="width:30%">Actions</th>
+          <th style="width:20%">VM name</th>
+          <th style="width:8%">CPU</th>
+          <th style="width:8%">RAM</th>
+          <th style="width:13%">IP address</th>
+          <th style="width:11%">State</th>
+          <th style="width:40%">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -64,12 +64,31 @@
             </td>
             <td>
               <div class="actions">
+                @if (vm.powerState !== 'poweredOn') {
+                  <button class="btn btn-power-on" (click)="onClickPowerOn(vm.id)">▶ On</button>
+                } @else {
+                  <button class="btn btn-power-off" (click)="onClickPowerOff(vm.id)">⏹ Off</button>
+                }
                 <button class="btn btn-info" (click)="onClickEdit(vm.id)">Edit</button>
                 <button class="btn btn-danger" (click)="onClickDelete(vm.id)">Delete</button>
                 <button class="btn btn-clone" (click)="onClickClone(vm.id)">Clone</button>
               </div>
             </td>
           </tr>
+
+          <!-- ✅ access row inside @for, after </tr> but still inside the loop -->
+          @if (vm.powerState === 'poweredOn' && vm.ip && vm.ip !== 'Powered Off' && vm.ip !== 'Booting...') {
+            <tr class="access-row">
+              <td colspan="6">
+                <div class="access-info">
+                  <span class="access-label">🖥️ SSH Access:</span>
+                  <code class="ssh-cmd">ssh root&#64;{{ vm.ip }}</code>
+                  <span class="access-label" style="margin-left:16px;">🌐 IP:</span>
+                  <code class="ssh-cmd">{{ vm.ip }}</code>
+                </div>
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>

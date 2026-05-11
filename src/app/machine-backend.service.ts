@@ -24,29 +24,29 @@ export class MachineBackendService {
 
   // ✅ ALL MACHINES
 getAllMachines(): Observable<Machine[]> {
-  return this.httpClient.get<Machine[]>(this.API_SERVER + "/machines")  // ← no trailing slash
+  return this.httpClient.get<Machine[]>(this.API_SERVER + "/api/machines")  // ← no trailing slash
     .pipe(catchError(this.handleError));
 }
 
   // ✅ COUNT MACHINES  ⭐ FIXED
   getMachinesNumber(): Observable<number> {
-    return this.httpClient.get<number>(this.API_SERVER + "/nbrmachines")
+    return this.httpClient.get<number>(this.API_SERVER + "/api/nbrmachines")
       .pipe(catchError(this.handleError));
   }
 
   // (optional but good)
   getMachineById(id: string): Observable<Machine> {
-    return this.httpClient.get<Machine>(this.API_SERVER + "/machines/" + id)
+    return this.httpClient.get<Machine>(this.API_SERVER + "/api/machines/" + id)
       .pipe(catchError(this.handleError));
   }
 
   getMyMachines(): Observable<any[]> {
-  return this.httpClient.get<any[]>(this.API_SERVER + "/machines/my")
+  return this.httpClient.get<any[]>(this.API_SERVER + "/api/machines/my")
     .pipe(catchError(this.handleError));
 }
 
   addMachine(machine: Machine): Observable<any> {
-    return this.httpClient.post(this.API_SERVER + "/machines", machine)
+    return this.httpClient.post(this.API_SERVER + "/api/machines", machine)
       .pipe(catchError(this.handleError));
   }
 }
