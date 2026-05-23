@@ -1,16 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
   <div class="container-fluid">
 
+    <!-- Brand -->
     <a class="navbar-brand fw-bold" routerLink="/home">CloudApp</a>
 
+    <!-- Toggler -->
     <button class="navbar-toggler" type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarContent">
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Navbar content -->
     <div class="collapse navbar-collapse" id="navbarContent">
 
+      <!-- LEFT SIDE MENU -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
         @if (isLoggedIn()) {
@@ -22,10 +26,17 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/dashboard">Dashboard</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/users">Users</a>
+            </li>
           }
 
           <li class="nav-item">
             <a class="nav-link" routerLink="/machines">My VMs</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/usage">My Usage</a>
           </li>
 
           <li class="nav-item">
@@ -36,21 +47,31 @@
 
       </ul>
 
-      <div class="d-flex align-items-center gap-2">
+      <!-- RIGHT SIDE USER AREA -->
+      <div class="d-flex align-items-center gap-3">
 
         @if (isLoggedIn()) {
-          <span class="navbar-text text-light me-2">
-            👤 {{ getUser() }}
-            @if (isAdmin()) {
-              <span class="badge bg-danger ms-1">Admin</span>
-            }
-          </span>
+
+          <!-- User profile -->
+          <a routerLink="/profile" class="text-decoration-none text-light">
+            <span class="navbar-text">
+              👤 {{ getUser() }}
+              @if (isAdmin()) {
+                <span class="badge bg-danger ms-1">Admin</span>
+              }
+            </span>
+          </a>
+
+          <!-- Logout -->
           <button class="btn btn-outline-light btn-sm" (click)="logOut()">
             Logout
           </button>
+
         } @else {
+
           <a class="btn btn-success btn-sm" routerLink="/login">Login</a>
           <a class="btn btn-outline-light btn-sm" routerLink="/register">Register</a>
+
         }
 
       </div>

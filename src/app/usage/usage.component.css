@@ -1,0 +1,107 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #e8e8e8;
+}
+
+.username { color: #1D9E75; font-weight: 600; }
+
+.page-header p {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.stat-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 500; color: #e8e8e8; }
+.stat-value.blue  { color: #378ADD; }
+.stat-value.green { color: #1D9E75; }
+
+.table-wrap {
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+thead { background: rgba(255,255,255,0.04); }
+
+thead th {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+}
+
+tbody tr {
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  transition: background .15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+tbody td {
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #ddd;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vm-name { font-weight: 500; font-size: 13px; color: #eee; }
+.vm-id   { font-size: 11px; font-family: monospace; color: #555; margin-top: 2px; }
+.date-text { font-size: 12px; font-family: monospace; color: #aaa; }
+
+.chip {
+  display: inline-block;
+  background: rgba(255,255,255,0.07);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #bbb;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-on      { background: #0a2e22; color: #1D9E75; }
+.badge-off     { background: #2e0a0a; color: #E24B4A; }
+.badge-unknown { background: rgba(255,255,255,0.06); color: #888; }
+
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot-on  { background: #1D9E75; }
+.dot-off { background: #E24B4A; }

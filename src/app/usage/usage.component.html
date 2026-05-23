@@ -1,0 +1,72 @@
+<div style="padding: 1.5rem;">
+
+  <div class="page-header">
+    <h2>Hello, <span class="username">{{ username }}</span> — your usage</h2>
+    <p>Track your VM usage and estimated costs.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total sessions</div>
+      <div class="stat-value">{{ poweredOnLogs.length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total time</div>
+      <div class="stat-value blue">{{ totalHours }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Estimated cost</div>
+      <div class="stat-value green">{{ estimatedCost }} €</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:25%">VM</th>
+          <th style="width:15%">Action</th>
+          <th style="width:20%">Started</th>
+          <th style="width:20%">Ended</th>
+          <th style="width:20%">Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logs; track log.id) {
+          <tr>
+            <td>
+              <div class="vm-name">{{ log.vmName ?? log.vmId }}</div>
+              <div class="vm-id">{{ log.vmId }}</div>
+            </td>
+            <td>
+              @if (log.action === 'POWER_ON') {
+                <span class="badge badge-on"><span class="dot dot-on"></span>Power On</span>
+              } @else if (log.action === 'POWER_OFF') {
+                <span class="badge badge-off"><span class="dot dot-off"></span>Power Off</span>
+              } @else {
+                <span class="badge badge-unknown">{{ log.action }}</span>
+              }
+            </td>
+            <td class="date-text">{{ formatDate(log.startedAt) }}</td>
+            <td class="date-text">{{ log.endedAt ? formatDate(log.endedAt) : 'Running...' }}</td>
+            <td>
+              @if (log.durationMinutes !== null) {
+                <span class="chip">{{ formatDuration(log.durationMinutes) }}</span>
+              } @else {
+                <span class="chip">Running...</span>
+              }
+            </td>
+          </tr>
+        }
+        @if (logs.length === 0) {
+          <tr>
+            <td colspan="5" style="text-align:center; color:#888; padding:2rem;">
+              No usage logs yet. Power on a VM to start tracking.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

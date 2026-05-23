@@ -32,7 +32,7 @@ export class UserBackendService {
       'Content-Type':  'application/json',
       'Accept':  'application/json',
     });
-	  return this.httpClient.get(this.API_SERVER+"/users", {headers: httpHeaders}).pipe(catchError(this.handleError));
+	  return this.httpClient.get(this.API_SERVER+"/api/users", {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 
   getUsersNumber():Observable<any> {    
@@ -40,7 +40,7 @@ export class UserBackendService {
       'Content-Type':  'application/json',
       'Accept':  'application/json',
     });
-	  return this.httpClient.get(this.API_SERVER+"/nbrusers", {headers: httpHeaders}).pipe(catchError(this.handleError));
+	  return this.httpClient.get(this.API_SERVER+"/api/nbrusers", {headers: httpHeaders}).pipe(catchError(this.handleError));
   }
 
   
@@ -51,10 +51,26 @@ export class UserBackendService {
       'Accept':  'application/json',
     });
     
-    return this.httpClient.post(this.API_SERVER+"/adduser", user, {headers: httpHeaders}).pipe(catchError(this.handleError));
+    return this.httpClient.post(this.API_SERVER+"/api/adduser", user, {headers: httpHeaders}).pipe(catchError(this.handleError));
     
   }
   
+
+  getMyLogs(): Observable<any[]> {
+    return this.httpClient.get<any[]>(this.API_SERVER + "/api/usage/my")
+      .pipe(catchError(this.handleError));
+  }
+
+  getMyTotalMinutes(): Observable<number> {
+    return this.httpClient.get<number>(this.API_SERVER + "/api/usage/my/total")
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllLogs(): Observable<any[]> {
+    return this.httpClient.get<any[]>(this.API_SERVER + "/api/usage/all")
+      .pipe(catchError(this.handleError));
+  }
+
   /*
   getUserById(id:string) : Observable<any> {
     let httpHeaders = new HttpHeaders({

@@ -1,0 +1,121 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #e8e8e8;
+}
+
+.page-header p {
+  color: #888;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.stat-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 500; color: #e8e8e8; }
+.stat-value.purple { color: #c4b5fd; }
+.stat-value.blue   { color: #378ADD; }
+.stat-value.green  { color: #1D9E75; }
+
+.table-wrap {
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+thead { background: rgba(255,255,255,0.04); }
+
+thead th {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+}
+
+tbody tr {
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  transition: background .15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+tbody td {
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #ddd;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.id-text    { font-family: monospace; font-size: 12px; color: #555; }
+.user-name  { font-weight: 500; color: #eee; }
+.email-text { font-size: 12px; color: #aaa; font-family: monospace; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-admin { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 0.5px solid #8b5cf6; }
+.badge-user  { background: rgba(55,138,221,0.12); color: #85B7EB; border: 0.5px solid #378ADD; }
+
+.chip {
+  display: inline-block;
+  background: rgba(255,255,255,0.07);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #bbb;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 8px;
+  border: 0.5px solid rgba(255,255,255,0.15);
+  background: transparent;
+  font-size: 12px;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.btn-danger { border-color: #F09595; color: #F09595; }
+.btn-danger:hover { background: rgba(226,75,74,0.1); }
+
+.protected-text {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
