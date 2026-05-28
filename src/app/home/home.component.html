@@ -1,71 +1,128 @@
 <div class="hero">
-
-  <h2>
-    Welcome to CloudApp ☁️
-  </h2>
-
-  <p>
-    Your modern cloud management platform for deploying, monitoring and managing virtual machines
-    with speed, simplicity and reliability.
-  </p>
-
+  <div class="hero-badge">Cloud VM Platform</div>
+  <h1>Manage your VMs with <span class="accent">CloudApp</span></h1>
+  <p>Deploy, monitor and manage virtual machines in seconds. Built for developers and teams who need speed, security and simplicity.</p>
+  <!-- <div class="cta-row">
+    <a routerLink="/register" class="btn-primary">Get started free</a>
+    <a routerLink="/login" class="btn-secondary">Login</a>
+  </div> -->
 </div>
 
-<!-- CARDS SECTION -->
-<div class="container mt-5">
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">99.9%</div><div class="stat-lbl">Uptime SLA</div></div>
+  <div class="stat-item"><div class="stat-num">&lt; 60s</div><div class="stat-lbl">VM deploy time</div></div>
+  <div class="stat-item"><div class="stat-num">SSH</div><div class="stat-lbl">Instant access</div></div>
+  <div class="stat-item"><div class="stat-num">JWT</div><div class="stat-lbl">Secure auth</div></div>
+</div>
 
-  <div class="row justify-content-center g-4">
+<div class="section-title">Everything you need</div>
+<div class="section-sub">All the tools to manage your virtual infrastructure</div>
 
-    <!-- CARD 1 -->
-    <div class="col-md-4">
+<div class="features">
+  <div class="feature-card">
+    <div class="feature-icon">🖥️</div>
+    <div class="feature-title">VM cloning</div>
+    <div class="feature-desc">Clone any template VM in seconds. Your instance is ready with one click.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <div class="feature-title">Power management</div>
+    <div class="feature-desc">Start and stop VMs instantly. IP address retrieved automatically on boot.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🔐</div>
+    <div class="feature-title">Secure access</div>
+    <div class="feature-desc">JWT authentication, role-based access control, SSH connection info.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">📊</div>
+    <div class="feature-title">Usage tracking</div>
+    <div class="feature-desc">Monitor VM uptime, usage hours and estimated cost in real time.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">👥</div>
+    <div class="feature-title">Multi-user</div>
+    <div class="feature-desc">Each user sees only their VMs. Admins manage the full platform.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🐳</div>
+    <div class="feature-title">Docker ready</div>
+    <div class="feature-desc">Fully containerized with Docker Compose. CI/CD via GitHub Actions.</div>
+  </div>
+</div>
 
-      <div class="card h-100">
+<div class="section-title">Simple pricing</div>
+<div class="section-sub">Start free, upgrade when you need more</div>
 
-        <a routerLink="/noclonedlist">
-          <img src="/centos.webp" class="card-img-top" alt="America region">
-        </a>
-
-        <div class="card-body">
-
-          <span class="badge bg-primary mb-2">AMERICA</span>
-
-          <h5 class="card-title">America Region</h5>
-
-          <p class="card-text">
-            High-performance cloud infrastructure optimized for global scalability and reliability.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- CARD 2 -->
-    <div class="col-md-4">
-
-      <div class="card h-100">
-
-        <a routerLink="/noclonedlist">
-          <img src="/ubuntu.png" class="card-img-top" alt="Asia region">
-        </a>
-
-        <div class="card-body">
-
-          <span class="badge bg-success mb-2">ASIA</span>
-
-          <h5 class="card-title">Asia Region</h5>
-
-          <p class="card-text">
-            Fast deployment and optimized computing power for Asian cloud workloads.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
+<div class="plans">
+  <div class="plan-card">
+    <div class="plan-name">Free</div>
+    <div class="plan-price">0€ <span>/ month</span></div>
+    <div class="plan-desc">Perfect for getting started</div>
+    <div class="plan-feature">1 VM maximum</div>
+    <div class="plan-feature">1 CPU / 512 MB RAM</div>
+    <div class="plan-feature">SSH access</div>
+    <div class="plan-feature">Usage tracking</div>
+    <div class="plan-feature disabled">Priority support</div>
+    <div class="plan-feature disabled">Custom templates</div>
+    <a routerLink="/register" class="plan-btn">Get started</a>
   </div>
 
+  <div class="plan-card featured">
+    <div class="plan-badge">Most popular</div>
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">9.99€ <span>/ month</span></div>
+    <div class="plan-desc">For developers and small teams</div>
+    <div class="plan-feature">5 VMs maximum</div>
+    <div class="plan-feature">4 CPU / 8 GB RAM</div>
+    <div class="plan-feature">SSH access</div>
+    <div class="plan-feature">Usage tracking</div>
+    <div class="plan-feature">Priority support</div>
+    <div class="plan-feature disabled">Custom templates</div>
+    <a routerLink="/register" class="plan-btn featured-btn">Start Pro trial</a>
+  </div>
+
+  <div class="plan-card">
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price">Custom <span>pricing</span></div>
+    <div class="plan-desc">For large teams and organizations</div>
+    <div class="plan-feature">Unlimited VMs</div>
+    <div class="plan-feature">Unlimited CPU / RAM</div>
+    <div class="plan-feature">SSH access</div>
+    <div class="plan-feature">Usage tracking</div>
+    <div class="plan-feature">Priority support</div>
+    <div class="plan-feature">Custom templates</div>
+    <a routerLink="/register" class="plan-btn">Contact us</a>
+  </div>
+</div>
+
+<div class="how-it-works">
+  <div class="section-title">How it works</div>
+  <div class="section-sub">Deploy your VM in 4 simple steps</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Register</div>
+      <div class="step-desc">Create your account in seconds</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Choose a template</div>
+      <div class="step-desc">Browse available VM templates</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Clone and boot</div>
+      <div class="step-desc">One click to clone and power on</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-title">Connect via SSH</div>
+      <div class="step-desc">Get your IP and connect instantly</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  © 2026 CloudApp — Built with Spring Boot, Angular and Docker
 </div>
