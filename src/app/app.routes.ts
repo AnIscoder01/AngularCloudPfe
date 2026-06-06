@@ -12,6 +12,8 @@ import { EditVmComponent } from './edit-vm/edit-vm.component';
 import { UsageComponent } from './usage/usage.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { PaymentSuccessComponent } from './payment-success/payment-success.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -32,4 +34,5 @@ export const routes: Routes = [
   { path: 'listvm',       component: ListvmComponent,       title: 'All VMs',   canActivate: [adminGuard] },
   { path: 'dashboard',    component: DashboardComponent,    title: 'Dashboard', canActivate: [adminGuard] },
   { path: 'admin/users',  component: AdminUsersComponent,   title: 'Users',     canActivate: [adminGuard] },
+  { path: 'payment-success', component: PaymentSuccessComponent },
 ];

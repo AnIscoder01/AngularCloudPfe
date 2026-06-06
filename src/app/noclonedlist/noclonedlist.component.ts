@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MachineBackendService } from '../machine-backend.service';
 import { VmwareApiService } from '../vmware-api.service';
+import { MachineBackendService } from '../machine-backend.service';
+import { UserBackendService } from '../user-backend.service';
 import { Machine } from '../machine';
 import { VMParam } from '../vmparam';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-noclonedlist',
@@ -14,36 +16,29 @@ import { VMParam } from '../vmparam';
 })
 export class NoclonedlistComponent implements OnInit {
 
-  listvm: any[] = [];
-  bdlist: any[] = [];
-  newlist: any[] = [];
-
+  templates: any[] = [];      // from DB — official templates
+  newlist: any[] = [];        // enriched with VMware live data
+  showUpgradeModal = false;
   showWait = false;
-  username = "";
+  username = '';
 
   constructor(
     private machineservice: MachineBackendService,
-    private vmapiservice: VmwareApiService
+    private vmapiservice: VmwareApiService,
+    private userService: UserBackendService,
+    private http: HttpClient
   ) {}
 
-  // ── computed getters for stats row ──────────────────────────
-  get poweredOnCount(): number {
-    return this.newlist.filter(v => v.powerState === 'poweredOn').length;
-  }
-
-  get poweredOffCount(): number {
-    return this.newlist.filter(v => v.powerState !== 'poweredOn').length;
-  }
+  get poweredOnCount() { return this.newlist.filter(v => v.powerState === 'poweredOn').length; }
+  get poweredOffCount() { return this.newlist.filter(v => v.powerState !== 'poweredOn').length; }
 
   vmName(path: string): string {
     if (!path) return 'Unknown';
     const parts = path.replace(/\\/g, '/').split('/');
-    const file = parts[parts.length - 1];
-    return file.replace('.vmx', '');
+    return parts[parts.length - 1].replace('.vmx', '');
   }
-  // ────────────────────────────────────────────────────────────
 
-  onClickClone(id: string) {
+  onClickClone(id: string, templateName: string, sshUser: string) {
     let name = prompt("Please give new VM name:") ?? "NewName";
     this.showWait = true;
 
@@ -56,84 +51,73 @@ export class NoclonedlistComponent implements OnInit {
 
         const machine: Machine = {
           id: data.id,
-          name: name,
+          name,
           description: desc
         };
 
         this.machineservice.addMachine(machine).subscribe({
-          next: () => alert("Machine data is now saved."),
+          next: () => alert("Machine saved. You can now access it from My VMs."),
           error: () => alert("Error saving machine data.")
         });
 
         window.location.reload();
       },
-      error: () => {
+      error: (err: any) => {
         this.showWait = false;
-        alert("Error cloning VM. Please try again.");
+        if (err.status === 403) {
+          this.showUpgradeModal = true;
+        } else {
+          alert("Error cloning VM. Please try again.");
+        }
       }
     });
   }
 
+  onClickUpgrade() {
+    this.showUpgradeModal = false;
+    this.userService.createCheckout().subscribe({
+      next: (data: any) => { window.location.href = data.url; },
+      error: () => alert('Error creating checkout session.')
+    });
+  }
+
   ngOnInit(): void {
-    this.username = localStorage.getItem('username') ?? "";
+    this.username = localStorage.getItem('username') ?? '';
 
-    this.vmapiservice.getVmList().subscribe({
-      next: vms => {
-        this.listvm = vms;
+    // ✅ fetch only registered templates from DB
+    this.http.get<any[]>('/api/templates').subscribe({
+      next: (templates) => {
+        this.templates = templates;
+        this.newlist = templates.map(t => ({
+          ...t,
+          ip: 'Powered Off',
+          powerState: 'powered-off',
+          cpu: null,
+          memory: null
+        }));
 
-        this.machineservice.getAllMachines().subscribe({
-          next: bd => {
-            this.bdlist = bd;
+        // enrich with live VMware data 
+        this.newlist.forEach(vm => {
+          this.vmapiservice.getVmPowerState(vm.id).subscribe({
+            next: (d: any) => { vm.powerState = d.power_state; },
+            error: () => { vm.powerState = 'unknown'; }
+          });
 
-            // filter only VMs not yet saved in DB
-            this.newlist = this.listvm.filter(vm =>
-              !this.bdlist.some(b => b.id === vm.id)
-            );
+          this.vmapiservice.getVmIp(vm.id).subscribe({
+            next: (d: any) => { vm.ip = d.ip ?? 'N/A'; },
+            error: () => { vm.ip = 'Powered Off'; }
+          });
 
-            // enrich each VM with details
-            this.newlist.forEach(vm => {
-              vm.ip = 'Powered Off';
-              vm.powerState = 'powered-off';
-              vm.cpu = null;
-              vm.memory = null;
-
-              // power state
-              this.vmapiservice.getVmPowerState(vm.id).subscribe({
-                next: (d: any) => {
-                  vm.powerState = d.power_state;
-                },
-                error: () => {
-                  vm.powerState = 'unknown';
-                }
-              });
-
-              // IP — 409 = VM is off
-              this.vmapiservice.getVmIp(vm.id).subscribe({
-                next: (d: any) => {
-                  vm.ip = d.ip ?? 'N/A';
-                },
-                error: (err: string) => {
-                  vm.ip = err.includes('409') ? 'Powered Off' : 'Unavailable';
-                }
-              });
-
-              // CPU and memory
-              this.vmapiservice.getVmById(vm.id).subscribe({
-                next: (d: VMParam) => {
-                  vm.cpu = d.cpu.processors;
-                  vm.memory = d.memory;
-                },
-                error: () => {
-                  vm.cpu = 'N/A';
-                  vm.memory = 'N/A';
-                }
-              });
-            });
-          },
-          error: () => console.error('Failed to load machines from DB')
+          this.vmapiservice.getVmById(vm.id).subscribe({
+            next: (d: VMParam) => {
+              vm.cpu = d.cpu.processors;
+              vm.memory = d.memory;
+            },
+            error: () => { vm.cpu = 'N/A'; vm.memory = 'N/A'; }
+          });
         });
       },
-      error: () => console.error('Failed to load VM list from VMware')
+      error: () => console.error('Failed to load templates')
     });
   }
 }

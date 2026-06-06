@@ -1,7 +1,7 @@
 <div style="padding: 1.5rem;">
 
   <div class="page-header">
-    <h2>Hello, <span class="username">{{username}}</span> — available VM models</h2>
+    <h2>Hello, <span class="username">{{username}}</span> — available VM templates</h2>
     <p>Select a template below and clone it to add it to your VM list.</p>
   </div>
 
@@ -31,20 +31,23 @@
     <table>
       <thead>
         <tr>
-          <th style="width:30%">VM name</th>
+          <th style="width:25%">Template name</th>
+          <th style="width:20%">OS</th>
           <th style="width:12%">RAM</th>
           <th style="width:8%">CPU</th>
-          <!-- <th style="width:18%">IP address</th>
-          <th style="width:14%">Power state</th> -->
-          <th style="width:18%">Action</th>
+          <th style="width:15%">SSH user</th>
+          <th style="width:20%">Action</th>
         </tr>
       </thead>
       <tbody>
         @for (nevm of newlist; track nevm.id) {
           <tr>
             <td>
-              <div class="vm-name">{{ vmName(nevm.path) }}</div>
-              <div class="vm-path">{{ nevm.path }}</div>
+              <div class="vm-name">{{ nevm.name }}</div>
+              <div class="vm-id">{{ nevm.id }}</div>
+            </td>
+            <td>
+              <span class="chip">{{ nevm.os ?? 'Linux' }}</span>
             </td>
             <td>
               <span class="chip">{{ nevm.memory ?? '...' }} MB</span>
@@ -52,20 +55,21 @@
             <td>
               <span class="chip">{{ nevm.cpu ?? '...' }}</span>
             </td>
-            <!-- <td style="font-family:monospace; font-size:12px;">
-              {{ nevm.ip }}
+            <td>
+              <span class="chip">{{ nevm.sshUser ?? 'anis' }}</span>
             </td>
             <td>
-              @if (nevm.powerState === 'poweredOn') {
-                <span class="badge badge-on"><span class="dot dot-on"></span>On</span>
-              } @else if (nevm.powerState === 'powered-off') {
-                <span class="badge badge-off"><span class="dot dot-off"></span>Off</span>
-              } @else {
-                <span class="badge badge-unknown"><span class="dot dot-unknown"></span>{{ nevm.powerState }}</span>
-              }
-            </td> -->
-            <td>
-              <button class="btn-clone" (click)="onClickClone(nevm.id)">Clone</button>
+              <button class="btn btn-clone"
+                (click)="onClickClone(nevm.id, nevm.name, nevm.sshUser)">
+                Clone
+              </button>
+            </td>
+          </tr>
+        }
+        @if (newlist.length === 0) {
+          <tr>
+            <td colspan="6" style="text-align:center; color:#888; padding:2rem;">
+              No templates available.
             </td>
           </tr>
         }
@@ -74,3 +78,32 @@
   </div>
 
 </div>
+
+@if (showUpgradeModal) {
+  <div class="modal-overlay" (click)="showUpgradeModal = false">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-icon">🔒</div>
+      <h3>VM limit reached</h3>
+      <p>Your FREE plan allows <strong>1 VM</strong>. Upgrade to PRO to get up to 5 VMs.</p>
+      <div class="modal-plans">
+        <div class="modal-plan">
+          <div class="modal-plan-name">FREE</div>
+          <div class="modal-plan-vms">1 VM</div>
+          <div class="modal-plan-price">0€/month</div>
+          <div class="modal-plan-current">Current plan</div>
+        </div>
+        <div class="modal-plan featured">
+          <div class="modal-plan-name">PRO</div>
+          <div class="modal-plan-vms">5 VMs</div>
+          <div class="modal-plan-price">9.99€/month</div>
+          <button class="modal-upgrade-btn" (click)="onClickUpgrade()">
+            Upgrade now
+          </button>
+        </div>
+      </div>
+      <button class="modal-close" (click)="showUpgradeModal = false">
+        Maybe later
+      </button>
+    </div>
+  </div>
+}

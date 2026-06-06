@@ -70,6 +70,23 @@ export class UserBackendService {
     return this.httpClient.get<any[]>(this.API_SERVER + "/api/usage/all")
       .pipe(catchError(this.handleError));
   }
+  upgradePlan(id: number, plan: string): Observable<any> {
+  return this.httpClient.put(
+    this.API_SERVER + `/api/users/${id}/plan`,
+    { plan }
+  ).pipe(catchError(this.handleError));
+}
+
+createCheckout(): Observable<any> {
+  return this.httpClient.post(this.API_SERVER + '/api/payment/checkout', {})
+    .pipe(catchError(this.handleError));
+}
+
+upgradeAfterPayment(sessionId: string): Observable<any> {
+  return this.httpClient.post(
+    `${this.API_SERVER}/api/payment/upgrade?sessionId=${sessionId}`, {}
+  ).pipe(catchError(this.handleError));
+}
 
   /*
   getUserById(id:string) : Observable<any> {

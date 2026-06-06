@@ -64,6 +64,26 @@
                 <span class="protected-text">Protected</span>
               }
             </td>
+<td>
+  @if (!user.roles?.includes('ROLE_ADMIN')) {
+    <div style="display:flex; gap:6px;">
+      @if (user.plan === 'FREE') {
+        <button class="btn btn-upgrade"
+          (click)="onUpgradePlan(user.id, user.username)">
+          → PRO
+        </button>
+      } @else {
+        <span class="plan-active">{{ user.plan }}</span>
+      }
+      <button class="btn btn-danger"
+        (click)="onDeleteUser(user.id, user.username)">
+        Delete
+      </button>
+    </div>
+  } @else {
+    <span class="protected-text">Protected</span>
+  }
+</td>           
           </tr>
         }
         @if (users.length === 0) {

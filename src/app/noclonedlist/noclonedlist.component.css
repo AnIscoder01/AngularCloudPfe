@@ -169,3 +169,87 @@ tbody td {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: #1a1f2e;
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-icon { font-size: 48px; margin-bottom: 12px; }
+
+.modal-card h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #eee;
+  margin-bottom: 8px;
+}
+
+.modal-card p {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.modal-card p strong { color: #ddd; }
+
+.modal-plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-plan {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.modal-plan.featured {
+  border-color: #1D9E75;
+  background: rgba(29,158,117,0.08);
+}
+
+.modal-plan-name { font-size: 13px; font-weight: 500; color: #eee; margin-bottom: 4px; }
+.modal-plan-vms  { font-size: 22px; font-weight: 500; color: #e8e8e8; margin: 8px 0 4px; }
+.modal-plan-price { font-size: 12px; color: #888; margin-bottom: 8px; }
+.modal-plan-current { font-size: 11px; color: #555; font-style: italic; }
+
+.modal-upgrade-btn {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #1D9E75;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.modal-close:hover { color: #888; }

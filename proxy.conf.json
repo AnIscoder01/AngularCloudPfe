@@ -1,0 +1,32 @@
+{
+  "/api/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/vmware/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/users": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/nbrusers": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/nbrmachines": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/deleteuser/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

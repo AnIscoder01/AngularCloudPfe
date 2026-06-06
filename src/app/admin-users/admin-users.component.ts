@@ -43,6 +43,17 @@ export class AdminUsersComponent implements OnInit {
       error: () => alert('Error deleting user.')
     });
   }
+  onUpgradePlan(id: number, username: string) {
+  if (!confirm(`Upgrade "${username}" to PRO plan?`)) return;
+  this.userService.upgradePlan(id, 'PRO').subscribe({
+    next: () => {
+      const user = this.users.find(u => u.id === id);
+      if (user) { user.plan = 'PRO'; user.maxVms = 5; }
+      alert(`${username} upgraded to PRO successfully.`);
+    },
+    error: () => alert('Error upgrading plan.')
+  });
+}
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username') ?? '';

@@ -46,10 +46,10 @@
       <tbody>
         @for (vm of listVm; track vm.id) {
           <tr>
-            <td>
-              <div class="vm-name">{{ vmName(vm.path) }}</div>
-              <div class="vm-id">{{ vm.id }}</div>
-            </td>
+           <td>
+  <div class="vm-name">{{ vm.name }}</div>
+  <!-- <div class="vm-id">{{ vm.id }}</div> -->
+</td>
             <td><span class="chip">{{ vm.cpu ?? '...' }} cores</span></td>
             <td><span class="chip">{{ vm.memory ?? '...' }} MB</span></td>
             <td class="ip-text">{{ vm.ip }}</td>

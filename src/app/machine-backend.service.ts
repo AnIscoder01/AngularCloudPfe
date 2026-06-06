@@ -49,4 +49,15 @@ getAllMachines(): Observable<Machine[]> {
     return this.httpClient.post(this.API_SERVER + "/api/machines", machine)
       .pipe(catchError(this.handleError));
   }
+  upgradePlan(id: number, plan: string): Observable<any> {
+  return this.httpClient.put(
+    this.API_SERVER + `/api/users/${id}/plan`,
+    { plan }
+  ).pipe(catchError(this.handleError));
+}
+
+deleteMachine(id: string): Observable<any> {
+  return this.httpClient.delete(this.API_SERVER + "/api/machines/" + id)
+    .pipe(catchError(this.handleError));
+}
 }

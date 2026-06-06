@@ -28,21 +28,33 @@ export class MachinesComponent implements OnInit {
   get poweredOffCount() { return this.listVm.filter(v => v.powerState !== 'poweredOn').length; }
   get totalRamGb()      { return Math.round(this.listVm.reduce((s, v) => s + (v.memory || 0), 0) / 1024); }
 
-  onClickDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this VM?')) return;
-    this.showWait = true;
-    this.vmApiService.deleteVm(id).subscribe({
-      next: () => {
-        this.showWait = false;
-        alert('Machine deleted successfully!');
-        window.location.reload();
-      },
-      error: () => {
-        this.showWait = false;
-        alert('Error deleting VM.');
-      }
-    });
-  }
+ onClickDelete(id: string) {
+  if (!confirm('Are you sure you want to delete this VM?')) return;
+  this.showWait = true;
+
+  // Step 1 — delete from VMware
+  this.vmApiService.deleteVm(id).subscribe({
+    next: () => {
+      // Step 2 — delete from DB
+      this.machineService.deleteMachine(id).subscribe({
+        next: () => {
+          this.showWait = false;
+          alert('Machine deleted successfully!');
+          this.listVm = this.listVm.filter(v => v.id !== id); // remove from list without reload
+        },
+        error: () => {
+          this.showWait = false;
+          alert('VM deleted from VMware but error removing from database.');
+          window.location.reload();
+        }
+      });
+    },
+    error: () => {
+      this.showWait = false;
+      alert('Error deleting VM.');
+    }
+  });
+}
   vmName(path: string): string {
   if (!path) return 'Unknown';
   const parts = path.replace(/\\/g, '/').split('/');

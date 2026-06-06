@@ -1,0 +1,29 @@
+<div style="display:flex; align-items:center; justify-content:center; min-height:80vh; padding:2rem;">
+  <div style="text-align:center; max-width:400px;">
+
+    @if (loading) {
+      <div class="spinner" style="margin:0 auto 24px;"></div>
+      <h2 style="color:#e8e8e8;">Processing your payment...</h2>
+    }
+
+    @if (!loading && success) {
+      <div style="font-size:64px; margin-bottom:16px;">🎉</div>
+      <h2 style="color:#1D9E75; font-size:1.5rem; margin-bottom:8px;">
+        Welcome to PRO!
+      </h2>
+      <p style="color:#888;">
+        Your plan has been upgraded. You can now create up to 5 VMs.
+        Redirecting you to your dashboard...
+      </p>
+    }
+
+    @if (!loading && !success) {
+      <div style="font-size:64px; margin-bottom:16px;">❌</div>
+      <h2 style="color:#E24B4A; font-size:1.5rem; margin-bottom:8px;">
+        Payment failed
+      </h2>
+      <p style="color:#888;">Something went wrong. Please try again.</p>
+    }
+
+  </div>
+</div>
