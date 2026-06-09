@@ -5,4 +5,7 @@ export interface Machine {
   name: string;
   description: string;
   owner?: User; 
+  sshUser?: string;
+  sshPassword?: string;
+
 }

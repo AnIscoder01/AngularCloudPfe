@@ -82,9 +82,8 @@
               <td colspan="6">
                 <div class="access-info">
                   <span class="access-label">🖥️ SSH Access:</span>
-                  <code class="ssh-cmd">ssh root&#64;{{ vm.ip }}</code>
-                  <span class="access-label" style="margin-left:16px;">🌐 IP:</span>
-                  <code class="ssh-cmd">{{ vm.ip }}</code>
+                  <code class="ssh-cmd">ssh {{ vm.sshUser ?? 'anis' }}&#64;{{ vm.ip }}</code>
+
                 </div>
               </td>
             </tr>

@@ -38,41 +38,42 @@ export class NoclonedlistComponent implements OnInit {
     return parts[parts.length - 1].replace('.vmx', '');
   }
 
-  onClickClone(id: string, templateName: string, sshUser: string) {
-    let name = prompt("Please give new VM name:") ?? "NewName";
-    this.showWait = true;
+  onClickClone(id: string, templateName: string, 
+             sshUser: string, sshPassword: string) {
+  let name = prompt("Please give new VM name:") ?? "NewName";
+  this.showWait = true;
 
-    this.vmapiservice.addVm(name, id).subscribe({
-      next: (data: any) => {
-        this.showWait = false;
-        alert("Machine cloned successfully!");
+  this.vmapiservice.addVm(name, id).subscribe({
+    next: (data: any) => {
+      this.showWait = false;
+      alert("Machine cloned successfully!");
+      let desc = prompt("Please give a description (optional):") ?? "";
 
-        let desc = prompt("Please give a description (optional):") ?? "";
+      const machine: Machine = {
+        id: data.id,
+        name,
+        description: desc,
+        sshUser: sshUser,       // ← from template
+        sshPassword: sshPassword  // ← save password
+      };
 
-        const machine: Machine = {
-          id: data.id,
-          name,
-          description: desc
-        };
+      this.machineservice.addMachine(machine).subscribe({
+        next: () => alert("Machine saved. You can now access it from My VMs."),
+        error: () => alert("Error saving machine data.")
+      });
 
-        this.machineservice.addMachine(machine).subscribe({
-          next: () => alert("Machine saved. You can now access it from My VMs."),
-          error: () => alert("Error saving machine data.")
-        });
-
-        window.location.reload();
-      },
-      error: (err: any) => {
-        this.showWait = false;
-        if (err.status === 403) {
-          this.showUpgradeModal = true;
-        } else {
-          alert("Error cloning VM. Please try again.");
-        }
+      window.location.reload();
+    },
+    error: (err: any) => {
+      this.showWait = false;
+      if (err.status === 403) {
+        this.showUpgradeModal = true;
+      } else {
+        alert("Error cloning VM. Please try again.");
       }
-    });
-  }
-
+    }
+  });
+}
   onClickUpgrade() {
     this.showUpgradeModal = false;
     this.userService.createCheckout().subscribe({
